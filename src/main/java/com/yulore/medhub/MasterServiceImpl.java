@@ -40,9 +40,9 @@ public class MasterServiceImpl implements MasterService {
     @Override
     public List<String> getUrlsOf(final String handler) {
         final var handler2url = this.handler2urlRef.get();
-        log.debug("handler2url: {}", handler2url);
+        log.info("handler2url: {}", handler2url);
         final var result = handler2url.get(handler);
-        log.debug("result: {}", result);
+        log.info("result: {}", result);
         return result != null ? result : List.of();
     }
 
