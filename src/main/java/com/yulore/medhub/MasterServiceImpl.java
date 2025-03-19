@@ -23,13 +23,16 @@ public class MasterServiceImpl implements MasterService {
     private static final long HUB_UPDATE_TIMEOUT_IN_MS = 1000 * 30; // 30s
 
     @Override
-    public void updateHubStatus(final String ipAndPort, final Map<String, String> pathMapping, final long timestamp) {
+    public void updateHubStatus(final long timestamp,
+                                final String ipAndPort,
+                                final Map<String, String> pathMapping,
+                                final String infoAsJson) {
         final long now = System.currentTimeMillis();
         if (now - timestamp > HUB_UPDATE_TIMEOUT_IN_MS) {
             // out of date update, ignore
             return;
         }
-        log.info("updateHubStatus: med-hub[{}] - pathMapping: {} - {}", ipAndPort, pathMapping, timestamp);
+        log.info("updateHubStatus: med-hub[{}] - pathMapping: {} - {}, info: {}", ipAndPort, pathMapping, timestamp, infoAsJson);
         hubMemos.put(ipAndPort, new HubMemo(ipAndPort, pathMapping, now));
         // 使用 compute 保证线程安全
 //        hubMemos.compute(ipAndPort, (k, v) ->
