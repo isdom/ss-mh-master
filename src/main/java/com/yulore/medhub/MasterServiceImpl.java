@@ -1,6 +1,5 @@
 package com.yulore.medhub;
 
-import com.yulore.api.MasterService;
 import com.yulore.medhub.vo.HubMemo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,8 +18,14 @@ import java.util.concurrent.atomic.AtomicReference;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class MasterServiceImpl implements MasterService {
+public class MasterServiceImpl implements LocalMasterService {
     private static final long HUB_UPDATE_TIMEOUT_IN_MS = 1000 * 30; // 30s
+
+    @Override
+    public void disableHubs(final String[] ips) {
+        disableIPs.set(ips);
+        log.info("disable hubs: {}", Arrays.toString(ips));
+    }
 
     @Override
     public void updateHubStatus(final long timestamp,
@@ -64,10 +69,16 @@ public class MasterServiceImpl implements MasterService {
                 }
             }
 
+            final String[] disabled = disableIPs.get();
             // 步骤2: 构建新的处理器映射表 (线程安全)
             final Map<String, List<String>> newHandlerMap = new HashMap<>();
 
             hubMemos.forEach((ipPort, memo) -> {
+                if (disabled != null
+                    && Arrays.stream(disabled).anyMatch(ip -> ipPort.startsWith(ip + ":"))) {
+                    // match disabled ip, so skip
+                    return;
+                }
                 final String baseUrl = "ws://" + memo.ipAndPort();
                 memo.pathMapping().forEach((path, handler) -> {
                     newHandlerMap.computeIfAbsent(handler, k -> new ArrayList<>()).add(baseUrl + path);
@@ -88,4 +99,5 @@ public class MasterServiceImpl implements MasterService {
     private final AtomicReference<Map<String, List<String>>> handler2urlRef = new AtomicReference<>(Map.of());
 
     private final ObjectProvider<ScheduledExecutorService> schedulerProvider;
+    private final AtomicReference<String[]> disableIPs = new AtomicReference<>(null);
 }
