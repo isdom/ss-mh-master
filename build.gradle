@@ -13,6 +13,7 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
     // for RequestMapping etc
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
@@ -28,6 +29,10 @@ dependencies {
     implementation "org.redisson:redisson-spring-data-27:3.43.0"
 
     implementation 'com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery:2021.0.5.0'
+
+    implementation 'io.micrometer:micrometer-registry-prometheus:1.9.17'
+    // https://mvnrepository.com/artifact/io.prometheus/simpleclient_pushgateway
+    implementation 'io.prometheus:simpleclient_pushgateway:0.16.0'
 
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.20'
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.20'
