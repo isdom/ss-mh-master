@@ -1,5 +1,6 @@
 package com.yulore.metric;
 
+import com.yulore.util.ExceptionUtil;
 import io.micrometer.prometheus.PrometheusMeterRegistry;
 import io.prometheus.client.CollectorRegistry;
 import io.prometheus.client.exporter.PushGateway;
@@ -35,7 +36,7 @@ public class MetricsPusher {
             log.debug("pushMetrics: pushGateway.pushAdd ended for {}", jobName);
         } catch (Exception ex) {
             // 处理异常（如重试或日志报警）
-            log.warn("pushMetrics: pushGateway.pushAdd failed", ex);
+            log.warn("pushMetrics: pushGateway.pushAdd failed: {}", ExceptionUtil.exception2detail(ex));
         }
     }
 }
