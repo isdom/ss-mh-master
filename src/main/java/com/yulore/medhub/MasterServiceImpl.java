@@ -28,6 +28,11 @@ public class MasterServiceImpl implements LocalMasterService {
     }
 
     @Override
+    public String status() {
+        return String.format("disable ips: %s", disableIPs.get() != null ? Arrays.toString(disableIPs.get()) : "null");
+    }
+
+    @Override
     public void updateHubStatus(final long timestamp,
                                 final String ipAndPort,
                                 final Map<String, String> pathMapping,
