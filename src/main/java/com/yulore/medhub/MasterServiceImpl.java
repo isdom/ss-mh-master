@@ -1,5 +1,6 @@
 package com.yulore.medhub;
 
+import com.yulore.medhub.controller.StatusResponse;
 import com.yulore.medhub.vo.HubMemo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,8 +29,8 @@ public class MasterServiceImpl implements LocalMasterService {
     }
 
     @Override
-    public String status() {
-        return String.format("disable ips: %s", disableIPs.get() != null ? Arrays.toString(disableIPs.get()) : "null");
+    public StatusResponse status() {
+        return StatusResponse.builder().disableIps(disableIPs.get()).build();
     }
 
     @Override

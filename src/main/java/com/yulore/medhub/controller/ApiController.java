@@ -22,8 +22,8 @@ public class ApiController {
 
     @RequestMapping(value = "/status", method = RequestMethod.GET)
     @ResponseBody
-    public ApiResponse<String> status() {
-        return ApiResponse.<String>builder().code("0000").data(masterService.status()).build();
+    public ApiResponse<StatusResponse> status() {
+        return ApiResponse.<StatusResponse>builder().code("0000").data(masterService.status()).build();
     }
 
     @Autowired
