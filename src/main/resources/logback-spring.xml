@@ -120,7 +120,8 @@
         </root>
         <logger name="io.netty" level="INFO"/>
         <logger name="org.redisson" level="INFO"/>
-        <logger name="org.springframework" level="INFO"/>
+        <logger name="com.yulore.metric" level="${metric.level:-INFO}"/>
+        <logger name="org.springframework" level="${spring.level:-INFO}"/>
     </springProfile>
 
 </configuration>

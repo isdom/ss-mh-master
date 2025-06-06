@@ -23,7 +23,7 @@ public class MetricsPusher {
         this.registry = registry;
     }
 
-    @Scheduled(fixedRate = 30_000)  // 每30秒推送一次
+    @Scheduled(fixedRate = 1_000)  // 每1秒推送一次
     public void pushMetrics() {
         try {
             final CollectorRegistry promRegistry = registry.getPrometheusRegistry();
