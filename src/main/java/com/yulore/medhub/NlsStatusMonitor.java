@@ -26,14 +26,11 @@ import java.util.function.Supplier;
 @RequiredArgsConstructor
 @Component
 public class NlsStatusMonitor {
-    @Value("${nls.aliasr-prefix}")
-    private String _aliasr_prefix;
+    @Value("${nls.asr-prefix}")
+    private String _asr_prefix;
 
     @Value("#{${nls.asr}}")
     private Map<String,String> _all_asr;
-
-    //@Value("${nls.txasr-prefix}")
-    //private String _txasr_prefix;
 
     private List<Object> keys;
     // 加载 Lua 脚本
@@ -50,10 +47,10 @@ public class NlsStatusMonitor {
         this.script = redisson.getScript(LongCodec.INSTANCE);
         // 生成完整的 Redis 键列表
         keys = _all_asr.keySet().stream()
-                .<Object>map(name -> _aliasr_prefix + ":" + name)
+                .<Object>map(name -> _asr_prefix + ":" + name)
                 .toList();
         for (String name : _all_asr.keySet()) {
-            final var rcc = redisson.getAtomicLong(_aliasr_prefix + ":" + name);;
+            final var rcc = redisson.getAtomicLong(_asr_prefix + ":" + name);;
             final var cc = new AtomicInteger(0);
             _aliasr_ccs.put(name, new Tuple<>(rcc, cc));
             gaugeProvider.getObject((Supplier<Number>)cc::get, "mm.aliasr.cc", MetricCustomized.builder().tags(List.of("name", name)).build());
@@ -70,7 +67,7 @@ public class NlsStatusMonitor {
                     RScript.ReturnType.INTEGER,
                     keys);
             _aliasr_all_cc.set(total.intValue());
-            log.info("status => {}: {}", _aliasr_prefix, total);
+            log.info("status => {}: {}", _asr_prefix, total);
             for (var entry : _aliasr_ccs.entrySet()) {
                 final var name = entry.getKey();
                 final var rcc = entry.getValue().getT1();
