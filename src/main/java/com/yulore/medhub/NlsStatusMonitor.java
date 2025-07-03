@@ -62,12 +62,13 @@ public class NlsStatusMonitor {
     @Scheduled(fixedDelay = 1_000)  // 每1秒推送一次
     void asrStatus() {
         try {
-            final Long total = script.eval(RScript.Mode.READ_ONLY,
+            /*final Long total =*/ script.<Long>evalAsync(RScript.Mode.READ_ONLY,
                     luaScript,
                     RScript.ReturnType.INTEGER,
-                    keys);
-            _aliasr_all_cc.set(total.intValue());
-            log.info("status => {}: {}", _asr_prefix, total);
+                    keys).whenComplete((total, ex)->{
+                _aliasr_all_cc.set(total.intValue());
+                log.info("status => {}: {}", _asr_prefix, total);
+            });
             for (var entry : _aliasr_ccs.entrySet()) {
                 final var name = entry.getKey();
                 final var rcc = entry.getValue().getT1();
