@@ -32,6 +32,12 @@ public class NlsStatusMonitor {
     @Value("#{${nls.asr}}")
     private Map<String,String> _all_asr;
 
+    @Value("${nls.tts-prefix}")
+    private String _tts_prefix;
+
+    @Value("#{${nls.tts}}")
+    private Map<String,String> _all_tts;
+
     private List<Object> keys;
     // 加载 Lua 脚本
     private final static String luaScript = """
