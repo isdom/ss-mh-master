@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Arrays;
+
 @Controller
 @Slf4j
 @RequestMapping("/medhub")
@@ -17,6 +19,7 @@ public class ApiController {
     @ResponseBody
     public ApiResponse<String> disable(@RequestBody final DisableHubsRequest request) {
         masterService.disableHubs(request.ips);
+        log.info("disable srv: {}", Arrays.toString(request.ips));
         return ApiResponse.<String>builder().code("0000").data("ok").build();
     }
 
