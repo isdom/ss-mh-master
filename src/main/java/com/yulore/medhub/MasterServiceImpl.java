@@ -2,6 +2,7 @@ package com.yulore.medhub;
 
 import com.yulore.medhub.controller.StatusResponse;
 import com.yulore.medhub.vo.HubMemo;
+import jodd.util.ArraysUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
@@ -26,6 +27,18 @@ public class MasterServiceImpl implements LocalMasterService {
     public void disableHubs(final String[] ips) {
         disableIPs.set(ips);
         log.info("disable hubs: {}", Arrays.toString(ips));
+    }
+
+    public void disableHub(final String ip) {
+        disableIPs.set(ArraysUtil.append(disableIPs.get(), ip));
+        log.info("disable hub: {}", ip);
+    }
+
+    public void enableHub(final String ip) {
+        final List<String> ips = new ArrayList<>(Arrays.asList(disableIPs.get()));
+        ips.remove(ip);
+        disableIPs.set(ips.toArray(new String[0]));
+        log.info("enable hub: {}", ip);
     }
 
     @Override
@@ -105,5 +118,5 @@ public class MasterServiceImpl implements LocalMasterService {
     private final AtomicReference<Map<String, List<String>>> handler2urlRef = new AtomicReference<>(Map.of());
 
     private final ObjectProvider<ScheduledExecutorService> schedulerProvider;
-    private final AtomicReference<String[]> disableIPs = new AtomicReference<>(null);
+    private final AtomicReference<String[]> disableIPs = new AtomicReference<>(new String[0]);
 }
